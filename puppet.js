@@ -30,26 +30,24 @@ const main = async (address) => {
   await page.type('input[placeholder="0xxxxxxxxxxxxxxxxxxxxxxxxxxx"]', address);
 
   await page.click(".btn-loader.buttonloader .btn.btn-primary.btn-block");
-
   console.log("it ran");
-
+  
 
   await page.waitForSelector(
     ".ps-t-12 .btn-loader.buttonloader.mx-auto .btn.btn-primary.btn-block");
 
-    
     await page.click(
       ".ps-t-12 .btn-loader.buttonloader.mx-auto .btn.btn-primary.btn-block"
       );
 
-      
+
     await page.waitForResponse((response) =>
       response.url() ===
       "https://faucet.polygon.technology/img/failed.06a0a36e.png"
       ? page.screenshot({ path: "error.png" })
       : console.log("success")
       );
-      
+
     }catch(e){console.log('collection error : ',e)}
 
 };

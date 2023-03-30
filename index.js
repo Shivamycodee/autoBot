@@ -77,7 +77,7 @@ bot.onText(/\/get/,async(msg)=>{
   );
 
   await main(text);
-  await findFile(chatId,true);
+  await findFile(chatId);
 
   if (chatObj["isGiven"]) {
     console.log("chatObj val : ", chatObj["isGiven"]);
@@ -86,20 +86,14 @@ bot.onText(/\/get/,async(msg)=>{
       chatId,
       `Yeah! Matic has been sended 🚀🚀  \n\n 1.  Chain : Mumbai 💜 \n 2.  address : ${text} \n 3.  Balance : ${balance} Matic`
     );
-
-    try {
-    await transferToPool(workerList[6].prv,workerList[6].pub)
-    } catch (e) {
-      console.log("pool index : ", e);
-    }
+  }else{
+    fs.unlink(targetFileName, (err) => {
+      if (err) {
+        throw err;
+      }
+      console.log("Delete File successfully.");
+    });
   }
-
-  fs.unlink(targetFileName, (err) => {
-    if (err) {
-      throw err;
-    }
-    console.log("Delete File successfully.");
-  });
 
 });
 
@@ -169,7 +163,7 @@ bot.onText(/\/fillup/,async(msg)=>{
         try {
 
           await main(pub);
-          await findFile(chatId,true);
+          await findFile(chatId);
 
           if (chatObj["isGiven"]) {
             bot.sendMessage(
@@ -244,7 +238,7 @@ function isValidAddress(address) {
 }
 
 
-const findFile = async(chatId,flag) => {
+const findFile = async(chatId) => {
 
    return new Promise((resolve, reject) => {
      fs.readdir(folderPath, (err, files) => {
@@ -261,7 +255,7 @@ const findFile = async(chatId,flag) => {
            `Found '${targetFileName}' in the folder:`,
            path.join(folderPath, foundFile)
          );
-         if(flag) bot.sendPhoto(chatId, path.join(folderPath, foundFile),fileOptions);
+       bot.sendPhoto(chatId, path.join(folderPath, foundFile),fileOptions);
          chatObj["isGiven"] = false;
 
        } else {
@@ -303,7 +297,7 @@ const autoFindFile = async () => {
 
 
 const autoFillup = async()=>{
-
+ console.log("in autoFillups")
   const len = workerList.length;
 
     for (let i = 0; i < len; i++) {
@@ -334,7 +328,7 @@ const autoFillup = async()=>{
 }
 
 const autoPools = async()=>{
-
+   console.log("in autoPools")
   const len = workerList.length;
 
     for (let i = 0; i < len; i++) {
@@ -357,10 +351,10 @@ const autoPools = async()=>{
 }
 
 
-setInterval(()=>{
-  console.log("fuck yeah in!")
-  autoFillup();
-  autoPools();
+setInterval(async()=>{
+  console.log("Interval triggered");
+  await autoFillup();
+  await autoPools();
 },190000)
 
 
