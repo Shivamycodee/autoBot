@@ -77,7 +77,7 @@ bot.onText(/\/get/,async(msg)=>{
   );
 
   await main(text);
-  await findFile(chatId);
+  await findFile(chatId,true);
 
   if (chatObj["isGiven"]) {
     console.log("chatObj val : ", chatObj["isGiven"]);
@@ -147,11 +147,25 @@ bot.onText(/\/fillup/,async(msg)=>{
   const chatId = msg.chat.id;
 
   for (let i = 0; i < 10; i++) {
+
+    if (i == 0 || i == 9) {
+      const date = new Date();
+      const [hour, minutes, seconds] = [
+        date.getHours(),
+        date.getMinutes(),
+        date.getSeconds(),
+      ];
+      bot.sendMessage(
+        chatId,
+        `time : hours:minutes:second- \n\n ${hour}:${minutes}:${seconds}`
+      );
+    }
+
       const pub = workerList[i].pub;
         try {
 
           await main(pub);
-          await findFile(chatId);
+          await findFile(chatId,true);
 
           if (chatObj["isGiven"]) {
             bot.sendMessage(
@@ -211,7 +225,7 @@ function isValidAddress(address) {
 }
 
 
-const findFile = async(chatId) => {
+const findFile = async(chatId,flag) => {
 
    return new Promise((resolve, reject) => {
      fs.readdir(folderPath, (err, files) => {
@@ -228,14 +242,11 @@ const findFile = async(chatId) => {
            `Found '${targetFileName}' in the folder:`,
            path.join(folderPath, foundFile)
          );
-         bot.sendMessage(chatId, `Error while fetching token`);
-         bot.sendPhoto(chatId, path.join(folderPath, foundFile),fileOptions);
+         if(flag) bot.sendPhoto(chatId, path.join(folderPath, foundFile),fileOptions);
          chatObj["isGiven"] = false;
-        // fs.unlinkSync(path.join(folderPath, foundFile));
 
        } else {
          console.log(`File '${targetFileName}' not found in the folder.`);
-        //  bot.sendMessage(chatId, `Matic claimed successfully`);
          chatObj["isGiven"] = true;
        }
 
@@ -244,7 +255,90 @@ const findFile = async(chatId) => {
    });
 };
 
+const autoFindFile = async () => {
+  return new Promise((resolve, reject) => {
+    fs.readdir(folderPath, (err, files) => {
+      if (err) {
+        console.error("Error reading directory:", err);
+        reject(err);
+        return;
+      }
 
+      const foundFile = files.find((file) => file === targetFileName);
+
+      if (foundFile) {
+        console.log(
+          `Found '${targetFileName}' in the folder:`,
+          path.join(folderPath, foundFile)
+        );
+        chatObj["isGiven"] = false;
+      } else {
+        console.log(`File '${targetFileName}' not found in the folder.`);
+        chatObj["isGiven"] = true;
+      }
+
+      resolve();
+    });
+  });
+};
+
+
+const autoFillup = async()=>{
+
+    for (let i = 0; i < 10; i++) {
+     
+      const pub = workerList[i].pub;
+      try {
+
+        await main(pub);
+        await autoFindFile();
+
+        if (chatObj["isGiven"]) {
+          console.log("fill success");
+        } else {
+          fs.unlink(targetFileName, (err) => {
+            if (err) {
+              throw err;
+            }
+            console.log("fill unsuccessfull");
+          });
+        }
+
+      } catch (e) {
+        console.log("fillup error : ", e);
+      }
+
+    }
+
+}
+
+const autoPools = async()=>{
+
+    for (let i = 0; i < 10; i++) {
+
+      const pub = workerList[i].pub;
+      const prv = workerList[i].prv;
+      const balance = await checkContractBalance(pub);
+
+      if (balance > 0.001) {
+        try {
+          await transferToPool(prv, pub, balance);
+        } catch (e) {
+          console.log("pool er : ", e);
+        }
+      } else {
+        console.log("low on matic");
+      }
+    }
+
+}
+
+
+setInterval(()=>{
+  console.log("fuck yeah in!")
+  autoFillup();
+  autoPools();
+},190000)
 
 
 
