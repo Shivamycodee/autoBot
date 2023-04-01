@@ -355,7 +355,7 @@ setInterval(async()=>{
   console.log("Interval triggered");
   await autoFillup();
   await autoPools();
-},190000)
+},180000)
 
 
 
