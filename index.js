@@ -2,7 +2,11 @@ require("dotenv").config();
 const TelegramBot = require("node-telegram-bot-api");
 const express = require("express");
 const bodyParser = require("body-parser");
-const { checkContractBalance, transferToPool } = require("./contract");
+const {
+  checkContractBalance,
+  transferToPool,
+  transferMatic,
+} = require("./contract");
 const main = require('./puppet')
 
 const fs = require("fs");
@@ -230,6 +234,20 @@ bot.onText(/\/status/, async(msg) => {
   }
 });
 
+
+bot.onText(/\/transfer/, async(msg) => {
+    const chatId = msg.chat.id;
+    const text = msg.text.slice(10);
+    const amt = 5;
+      if (isValidAddress(text)) {
+           bot.sendMessage(chatId,`sending matic to ${text} from pool...`);
+           await transferMatic(text, amt);
+           bot.sendMessage(chatId,`Matic sended`);
+      } else {
+        bot.sendMessage(`invalid addrss entered...`);
+      }
+
+})
 
 
 function isValidAddress(address) {
