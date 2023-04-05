@@ -20,7 +20,7 @@ const path = require("path");
 const folderPath = __dirname; // The current folder
 const targetFileName = "error.png";
 
-const workingWallets = 1;
+const workingWallets = 20;
 let temp = [];
 
 
