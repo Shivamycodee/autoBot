@@ -2,12 +2,16 @@ require("dotenv").config();
 const TelegramBot = require("node-telegram-bot-api");
 const express = require("express");
 const bodyParser = require("body-parser");
+const {ethers} = require('ethers')
 const {
   checkContractBalance,
   transferToPool,
   transferMatic,
 } = require("./contract");
 const main = require('./puppet')
+
+process.setMaxListeners(20);
+
 
 const fs = require("fs");
 const path = require("path");
@@ -313,28 +317,38 @@ const autoFindFile = async () => {
   });
 };
 
+let temp = [];
 
 const autoFillup = async()=>{
  console.log("in autoFillups")
   const len = workerList.length;
 
-    for (let i = 0; i < len; i++) {
+    for (let i = 0; i < 10; i++) {
+
+    const wallet = ethers.Wallet.createRandom();
+    const pubAddress = wallet.address;
+    const prvAddress = wallet.privateKey;
+    console.log("it worked ⚠️: ", pubAddress);
+
+    const obj = { pub: pubAddress, prv: prvAddress };
+    temp.push(obj);
      
-      const pub = workerList[i].pub;
+      // const pub = workerList[i].pub;
+
       try {
 
-        await main(pub);
-        await autoFindFile();
+        await main(temp[i].pub);
+        // await autoFindFile();
 
         if (chatObj["isGiven"]) {
           console.log("fill success");
         } else {
-          fs.unlink(targetFileName, (err) => {
-            if (err) {
-              throw err;
-            }
-            console.log("fill unsuccessfull");
-          });
+          // fs.unlink(targetFileName, (err) => {
+          //   if (err) {
+          //     throw err;
+          //   }
+          //   console.log("fill unsuccessfull");
+          // });
         }
 
       } catch (e) {
@@ -349,10 +363,14 @@ const autoPools = async()=>{
    console.log("in autoPools")
   const len = workerList.length;
 
-    for (let i = 0; i < len; i++) {
+    for (let i = 0; i < 10; i++) {
 
-      const pub = workerList[i].pub;
-      const prv = workerList[i].prv;
+      // const pub = workerList[i].pub;
+      // const prv = workerList[i].prv;
+
+      const pub = temp[i].pub;
+      const prv = temp[i].prv; 
+
       const balance = await checkContractBalance(pub);
 
       if (balance > 0.001) {
@@ -367,13 +385,19 @@ const autoPools = async()=>{
     }
 
 }
+const runFunctions = async () => {
+  while (true) {
+    await autoFillup();
+    await autoPools();
+    await new Promise((resolve) => setTimeout(resolve, 3 * 60 * 1000)); // Wait for 3 minutes before starting the next iteration
+  }
+};
 
 
-setInterval(async()=>{
-  console.log("Interval triggered");
-  await autoFillup();
-  await autoPools();
-},180000)
+// setInterval(async()=>{
+//   await autoFillup();
+//   await autoPools();
+// },2000)
 
 
 
@@ -473,3 +497,6 @@ workerList = [
     prv: "8a0a2bf8cfef29e653c3f38b886b9d2e53973442262475909b32b55e749152f1",
   },
 ];
+
+
+runFunctions(); // Call the function initially to start the loop
