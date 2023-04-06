@@ -17,7 +17,7 @@ const main = async (address) => {
       "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
     ],
   });
-  const page = await browser.newPage();
+  const page = await browser.newPage({ timeout: 60000 });
   await page.emulate(iPhone);
 
   // await page.setViewport({ width: 1300, height: 700 });
@@ -41,17 +41,19 @@ const main = async (address) => {
       );
 
 
-    // await page.waitForResponse((response) =>
-    //   response.url() ===
-    //   "https://faucet.polygon.technology/img/failed.06a0a36e.png"
-    //   ? 
-    //   // page.screenshot({ path: "error.png" })
-    //   console.log("matic not given")
-    //   : console.log("success")
-    //   );
-    console.log("success");
+    await page.waitForResponse((response) =>
+      response.url() ===
+      "https://faucet.polygon.technology/img/failed.06a0a36e.png"
+      ? 
+      // page.screenshot({ path: "error.png" })
+      console.log("matic not given")
+      : console.log("success")
+      );
+    // console.log("success");
+    await page.close();
 
-    }catch(e){console.log('collection error : ',e)}
+
+    }catch(e){console.log(`waiting time to fetch tokens`)}
 
 };
 

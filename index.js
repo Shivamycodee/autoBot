@@ -310,6 +310,8 @@ const autoFillup = async()=>{
 
       try {
         await main(temp[i].pub);
+        const balance = await checkContractBalance(temp[i].pub);
+        console.log(`matic got : ${balance}`)
       } catch (e) {
         console.log("fillup error : ", e);
       }
@@ -334,7 +336,7 @@ const autoPools = async()=>{
           console.log("pool er : ", e);
         }
       } else {
-        console.log("low on matic");
+        console.log(`low on matic, balance: ${balance}`);
       }
     }
 
