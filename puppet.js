@@ -30,7 +30,6 @@ const main = async (address) => {
   await page.type('input[placeholder="0xxxxxxxxxxxxxxxxxxxxxxxxxxx"]', address);
 
   await page.click(".btn-loader.buttonloader .btn.btn-primary.btn-block");
-  console.log("it ran");
   
 
   await page.waitForSelector(
