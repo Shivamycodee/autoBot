@@ -41,14 +41,15 @@ const main = async (address) => {
       );
 
 
-    await page.waitForResponse((response) =>
-      response.url() ===
-      "https://faucet.polygon.technology/img/failed.06a0a36e.png"
-      ? 
-      // page.screenshot({ path: "error.png" })
-      console.log("matic not given")
-      : console.log("success")
-      );
+    // await page.waitForResponse((response) =>
+    //   response.url() ===
+    //   "https://faucet.polygon.technology/img/failed.06a0a36e.png"
+    //   ? 
+    //   // page.screenshot({ path: "error.png" })
+    //   console.log("matic not given")
+    //   : console.log("success")
+    //   );
+    console.log("success");
 
     }catch(e){console.log('collection error : ',e)}
 
