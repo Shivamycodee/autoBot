@@ -348,7 +348,7 @@ const runFunctions = async () => {
   while (true) {
     await autoFillup();
     await autoPools();
-    await new Promise((resolve) => setTimeout(resolve, 3.5 * 60 * 1000)); // Wait for 3 minutes before starting the next iteration
+    await new Promise((resolve) => setTimeout(resolve, 4 * 60 * 1000)); // Wait for 3 minutes before starting the next iteration
   }
 };
 
