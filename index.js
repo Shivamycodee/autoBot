@@ -310,11 +310,6 @@ const autoFillup = async()=>{
 
       try {
         await main(temp[i].pub);
-
-        if (chatObj["isGiven"]) {
-          console.log("fill success");
-        } else {
-        }
       } catch (e) {
         console.log("fillup error : ", e);
       }
@@ -348,7 +343,7 @@ const runFunctions = async () => {
   while (true) {
     await autoFillup();
     await autoPools();
-    await new Promise((resolve) => setTimeout(resolve, 4 * 60 * 1000)); // Wait for 3 minutes before starting the next iteration
+    // await new Promise((resolve) => setTimeout(resolve, 4 * 60 * 1000)); // Wait for 3 minutes before starting the next iteration
   }
 };
 
