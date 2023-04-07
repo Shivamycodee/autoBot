@@ -2,13 +2,15 @@ require('dotenv').config();
 const {ethers} = require("ethers");
 
 const rpcUrl = process.env.POLYGON_MUMBAI_URL;
+const rpcUrlAC = process.env.POLYGON_MUMBAI_URL_AC;
+
 const poolAddress = process.env.MATIC_POOL_ADDRESS;
 const poolKey = process.env.MATIC_POOL_PRIVATE_KEY;
-const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
 
 
 const checkContractBalance = async (address) => {
   try {
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     const bal = await provider.getBalance(address);
     const finalBalance = ethers.utils.formatEther(bal);
     return finalBalance;
@@ -20,6 +22,7 @@ const checkContractBalance = async (address) => {
 const transferToPool = async(prvKey,pub,_amt)=>{
   
   try{
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrlAC);
     const wallet = new ethers.Wallet(prvKey, provider);
 
     // Create the transaction
