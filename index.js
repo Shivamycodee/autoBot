@@ -8,7 +8,7 @@ const {
 } = require("./contract");
 const main = require('./puppet')
 
-process.setMaxListeners(20);
+process.setMaxListeners(30);
 
 
 const workingWallets = 10;
@@ -38,8 +38,8 @@ const autoFillup = async()=>{
 
       try {
         await main(temp[i].pub);
-        const balance = await checkContractBalance(temp[i].pub);
-        console.log(balance)
+        // const balance = await checkContractBalance(temp[i].pub);
+        // console.log(balance)
       } catch (e) {
       }
     }
