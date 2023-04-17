@@ -45,14 +45,16 @@ const main = async (address) => {
       "https://faucet.polygon.technology/img/failed.06a0a36e.png"
       ? 
       // page.screenshot({ path: "error.png" })
-      console.log("matic not given")
-      : console.log("success")
+      null //console.log("matic not given")
+      : null // console.log("success")
       );
     // console.log("success");
     await page.close();
 
 
-    }catch(e){console.log(`waiting time to fetch tokens`)}
+    }catch(e){
+    //  console.log(`waiting time to fetch tokens`)
+    }
 
 };
 

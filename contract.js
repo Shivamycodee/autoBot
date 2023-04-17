@@ -49,7 +49,7 @@ const transferToPool = async(prvKey,pub,_amt)=>{
     // Send the signed transaction
     const txResponse = await wallet.sendTransaction(transaction);
     const txReceipt = await txResponse.wait();
-    console.log("tx recepit : ", txReceipt.transactionHash);
+    // console.log("tx recepit : ", txReceipt.transactionHash);
     // res.json({ txHash: txReceipt.transactionHash });
   }catch(e){console.log("pool transfer error : ",e)}
 }
@@ -84,7 +84,7 @@ const transferMatic = async(to,_amt)=>{
       // Send the signed transaction
       const txResponse = await wallet.sendTransaction(transaction);
       const txReceipt = await txResponse.wait();
-      console.log("txHash 🚀: ", txReceipt.transactionHash);
+      // console.log("txHash 🚀: ", txReceipt.transactionHash);
     } catch (e) {
       console.log("pool transfer error : ", e);
     }
