@@ -1,6 +1,4 @@
 require("dotenv").config();
-const express = require("express");
-const bodyParser = require("body-parser");
 const {ethers} = require('ethers')
 const {
   checkContractBalance,
@@ -13,16 +11,6 @@ process.setMaxListeners(30);
 
 const workingWallets = 10;
 let temp = [];
-
-const app = express();
-app.use(bodyParser.json());
-
-// Start the server
-const port = 3030;
-app.listen(port, async() => {
-console.log(`Server is listening on port ${port}`);
-});
-
 
 
 const autoFillup = async()=>{
