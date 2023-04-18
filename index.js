@@ -26,8 +26,8 @@ const autoFillup = async()=>{
 
       try {
         await main(temp[i].pub);
-        // const balance = await checkContractBalance(temp[i].pub);
-        // console.log(balance)
+       if(i == 2 || i == 8){ const balance = await checkContractBalance(temp[i].pub);
+        console.log(balance)}
       } catch (e) {
       }
     }
