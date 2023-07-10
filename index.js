@@ -9,11 +9,12 @@ const main = require('./puppet')
 process.setMaxListeners(30);
 
 
-const workingWallets = 10;
+const workingWallets = 5;
 let temp = [];
 
 
 const autoFillup = async()=>{
+     console.log("fill up.")
 
     for (let i = 0; i < workingWallets; i++) {
 
@@ -26,8 +27,10 @@ const autoFillup = async()=>{
 
       try {
         await main(temp[i].pub);
-       if(i == 2 || i == 8){ const balance = await checkContractBalance(temp[i].pub);
-        console.log(balance)}
+       if(i == 3){
+         const balance = await checkContractBalance(temp[i].pub);
+        console.log(balance)
+      }
       } catch (e) {
       }
     }
@@ -35,6 +38,7 @@ const autoFillup = async()=>{
 }
 
 const autoPools = async()=>{
+     console.log("pools.");
 
     for (let i = 0; i < workingWallets; i++) {
 
@@ -59,6 +63,11 @@ const runFunctions = async () => {
     await autoPools();
   }
 };
+
+
+function delay(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
 
 
 runFunctions(); // Call the function initially to start the loop
